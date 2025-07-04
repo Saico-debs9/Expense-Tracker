@@ -10,6 +10,7 @@ app.use(express.json());
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/expenses', require('./routes/expenseRoutes'));
 
+
 const port= process.env.PORT;
 
 sequelize.sync().then(() => {

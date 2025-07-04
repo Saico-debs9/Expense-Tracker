@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getExpenses, addExpense } from '../Services/expenseService';
+import { getExpenses, addExpense, updateExpense, deleteExpense } from '../Services/expenseService';
 import Navbar from '../Components/Navbar';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,6 +8,11 @@ const DashboardPage = () => {
   const [tab, setTab] = useState('view');
   const [form, setForm] = useState({ title: '', amount: '', category: '', date: '', description: '' });
   const [filter, setFilter] = useState('');
+  const [editId, setEditId] = useState(null);
+  const [editForm, setEditForm] = useState({
+    title: '', amount: '', category: '', date: '', description: ''
+  });
+
 
   const navigate = useNavigate();
 
@@ -30,6 +35,33 @@ const DashboardPage = () => {
     setForm({ title: '', amount: '', category: '', date: '', description: '' });
     fetchExpenses();
   };
+  const handleEdit = (exp) => {
+    setEditId(exp.id);
+    setEditForm({
+      title: exp.title,
+      amount: exp.amount,
+      category: exp.category,
+      date: exp.date,
+      description: exp.description
+    });
+  };
+
+  const handleEditChange = (e) => {
+    setEditForm({ ...editForm, [e.target.name]: e.target.value });
+  };
+
+  const handleSave = async (id) => {
+    await updateExpense(id, editForm);
+    setEditId(null);
+    fetchExpenses();
+  };
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this expense?")) {
+      await deleteExpense(id);
+      fetchExpenses();
+    }
+  };
+
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -66,7 +98,7 @@ const DashboardPage = () => {
             <tbody>
               {filteredExpenses.length === 0 ? (
                 <tr>
-                  <td colSpan="5" className='no-data'style={{ textAlign: 'center' }}><span>No data to show. Add your first expense now.</span></td>
+                  <td colSpan="5" className='no-data' style={{ textAlign: 'center' }}><span>No data to show. Add your first expense now.</span></td>
                 </tr>
               ) : (
                 filteredExpenses.map(exp => {
@@ -111,6 +143,85 @@ const DashboardPage = () => {
         </div>
 
       )}
+      {tab === 'edit' && (
+        <div className="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Amount</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Edit</th>
+              </tr>
+            </thead>
+            <tbody>
+              {expenses.map(exp => (
+                editId === exp.id ? (
+                  <tr key={exp.id}>
+                    <td><input name="title" value={editForm.title} onChange={handleEditChange} /></td>
+                    <td><input name="amount" value={editForm.amount} onChange={handleEditChange} /></td>
+                    <td>
+                      <select name="category" value={editForm.category} onChange={handleEditChange}>
+                        <option value="Food">Food</option>
+                        <option value="Travel">Travel</option>
+                        <option value="Groceries">Groceries</option>
+                        <option value="Others">Others</option>
+                      </select>
+                    </td>
+                    <td><input name="date" value={editForm.date} onChange={handleEditChange} /></td>
+                    <td><input name="description" value={editForm.description} onChange={handleEditChange} /></td>
+                    <td>
+                      <button onClick={() => handleSave(exp.id)}>Save</button>
+                    </td>
+                  </tr>
+                ) : (
+                  <tr key={exp.id}>
+                    <td>{exp.title}</td>
+                    <td>{exp.amount}</td>
+                    <td>{exp.category}</td>
+                    <td>{exp.date}</td>
+                    <td>{exp.description}</td>
+                    <td  className='edit-icon' onClick={() => handleEdit(exp)}>✏️
+                    </td>
+                  </tr>
+                )
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      {tab === 'delete' && (
+        <div className="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Amount</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {expenses.map(exp => (
+                <tr key={exp.id}>
+                  <td>{exp.title}</td>
+                  <td>{exp.amount}</td>
+                  <td>{exp.category}</td>
+                  <td>{exp.date}</td>
+                  <td>{exp.description}</td>
+                  <td onClick={() => handleDelete(exp.id)} className='delete-icon'> 🗑️
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
 
       {/* Future implementation: edit, delete, sort tabs */}
     </div>

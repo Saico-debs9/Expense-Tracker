@@ -36,7 +36,14 @@ input, select {
   background-color: #333;
   color: #e0e0e0;
 }
-
+.delete-icon{
+  text-align: center;
+  cursor: pointer;
+}
+.edit-icon{
+  text-align: center;
+  cursor: pointer;
+}
 button {
   width: 100%;
   padding: 10px;
@@ -128,7 +135,7 @@ table {
 th, td {
   border: 1px solid #333;
   padding: 10px;
-  text-align: left;
+  text-align: center;
 }
 
 th {
