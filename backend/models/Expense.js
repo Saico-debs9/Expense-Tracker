@@ -6,8 +6,12 @@ const Expense = sequelize.define('Expense', {
   title: DataTypes.STRING,
   amount: DataTypes.FLOAT,
   bank: DataTypes.STRING,
-  category: DataTypes.STRING,
-  date: DataTypes.DATEONLY,
+  category: {
+    type: DataTypes.ENUM('Food', 'Travel', 'Groceries', 'Others'),
+    allowNull: false
+  },
+  
+  date: DataTypes.STRING,
   description: DataTypes.STRING
 });
 

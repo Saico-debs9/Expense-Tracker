@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../Services/authService';
+import icon from '../Public/icon.png';
 
 const LoginPage = () => {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -21,14 +22,22 @@ const LoginPage = () => {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
+    <div className='form-container'>
+      <div>
+      <div className="logo">
+        <img src={icon} alt="logo" />
+        <h2>Expense Tracker</h2>
+      </div>
+      
       <form onSubmit={handleSubmit}>
         <input name="email" placeholder="Email" onChange={handleChange} />
         <input name="password" placeholder="Password" type="password" onChange={handleChange} />
         <button type="submit">Login</button>
+        <div className='link-container'><span>New here?</span><a className="link" href="/signup">Signin</a>
+        </div>
       </form>
-      <button className='nav-btm' onClick={() => navigate('/signup')}>Signup</button>
+     
+      </div>  
     </div>
   );
 };

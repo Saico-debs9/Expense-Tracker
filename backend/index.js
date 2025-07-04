@@ -13,5 +13,7 @@ app.use('/api/expenses', require('./routes/expenseRoutes'));
 const port= process.env.PORT;
 
 sequelize.sync().then(() => {
-  app.listen(port, '0.0.0.0', () => console.log(`Backend running on http://localhost:${port}`));
+  app.listen(port, '0.0.0.0', () => console.log(`Backend running on http://localhost:${port} 
+Frontend on port 3000
+Nginx on <ip>:9002`));
 });
