@@ -5,8 +5,8 @@ const auth = require('../controllers/tokenController');
 
 router.post('/', auth, addExpense);
 router.get('/', auth, getExpenses);
-router.put('/updateexpenses/:id', updateExpense);
-router.delete('/deleteexpenses/:id', deleteExpense);
+router.put('/updateexpenses/:id', auth, updateExpense);
+router.delete('/deleteexpenses/:id', auth, deleteExpense);
 
 
 module.exports = router;

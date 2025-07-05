@@ -1,5 +1,6 @@
 import React from 'react';
 import icon from '../Public/icon.png'
+// import ThemeToggle from './ThemeToggle';
 
 const Navbar = ({ setTab, handleLogout }) => (
     <div className="navbar">
@@ -14,6 +15,7 @@ const Navbar = ({ setTab, handleLogout }) => (
                 <button onClick={() => setTab('sort')}>Sort</button>
             </div>
         </div>
+        {/* <ThemeToggle /> */}
         <button className="logout-btn" onClick={handleLogout}>Logout</button>
     </div>
 );

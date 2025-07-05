@@ -7,9 +7,27 @@ const Expense = sequelize.define('Expense', {
   amount: DataTypes.FLOAT,
   bank: DataTypes.STRING,
   category: {
-    type: DataTypes.ENUM('Food', 'Travel', 'Groceries', 'Others'),
+    type: DataTypes.ENUM(
+      'Food',
+      'Groceries',
+      'Travel',
+      'Shopping',
+      'EMIs',
+      'Investments',
+      'Rent',
+      'Utilities',
+      'Health & Medical',
+      'Entertainment',
+      'Education',
+      'Savings',
+      'Gifts & Donations',
+      'Insurance',
+      'Fuel / Transport',
+      'Others'
+    ),
     allowNull: false
   },
+  
   
   date: DataTypes.STRING,
   description: DataTypes.STRING

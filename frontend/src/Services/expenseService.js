@@ -13,8 +13,12 @@ export const addExpense = (expense) =>
   });
 
 export const updateExpense = (id, data) =>
-  axios.put(`${API_URL}/updateexpenses/${id}`, data);
+  axios.put(`${API_URL}/updateexpenses/${id}`, data, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+  });
 
 export const deleteExpense = (id) =>
-  axios.delete(`${API_URL}/deleteexpenses/${id}`);
+  axios.delete(`${API_URL}/deleteexpenses/${id}`, {
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+  });
 

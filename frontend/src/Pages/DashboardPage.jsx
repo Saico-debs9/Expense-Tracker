@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { getExpenses, addExpense, updateExpense, deleteExpense } from '../Services/expenseService';
 import Navbar from '../Components/Navbar';
 import { useNavigate } from 'react-router-dom';
+import {toast} from 'react-toastify';
+
 
 const DashboardPage = () => {
   const [expenses, setExpenses] = useState([]);
@@ -22,7 +24,7 @@ const DashboardPage = () => {
     setExpenses(res.data);
     setSortedExpenses(res.data);
   };
-  
+
 
   useEffect(() => {
     fetchExpenses();
@@ -34,7 +36,7 @@ const DashboardPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await addExpense(form);
-    alert("Added expense");
+    toast.success("Added expense");
     setForm({ title: '', amount: '', category: '', date: '', description: '' });
     fetchExpenses();
   };
@@ -76,7 +78,7 @@ const DashboardPage = () => {
     }
     setSortedExpenses(sorted);
   };
-  
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/login');
@@ -85,18 +87,31 @@ const DashboardPage = () => {
   const filteredExpenses = filter
     ? expenses.filter(exp => exp.category === filter)
     : expenses;
+  const totalAmount = filteredExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+
 
   return (
     <div >
       <Navbar setTab={setTab} handleLogout={handleLogout} />
-
       {tab === 'view' && (
         <div className="table-container">
           <select onChange={(e) => setFilter(e.target.value)}>
             <option value="">All Categories</option>
             <option value="Food">Food</option>
-            <option value="Travel">Travel</option>
             <option value="Groceries">Groceries</option>
+            <option value="Travel">Travel</option>
+            <option value="Shopping">Shopping</option>
+            <option value="EMIs">EMIs</option>
+            <option value="Investments">Investments</option>
+            <option value="Rent">Rent</option>
+            <option value="Utilities">Utilities</option>
+            <option value="Health & Medical">Health & Medical</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Education">Education</option>
+            <option value="Savings">Savings</option>
+            <option value="Gifts & Donations">Gifts & Donations</option>
+            <option value="Insurance">Insurance</option>
+            <option value="Fuel / Transport">Fuel / Transport</option>
             <option value="Others">Others</option>
           </select>
           <table>
@@ -112,22 +127,29 @@ const DashboardPage = () => {
             <tbody>
               {filteredExpenses.length === 0 ? (
                 <tr>
-                  <td colSpan="5" className='no-data' style={{ textAlign: 'center' }}><span>No data to show. Add your first expense now.</span></td>
+                  <td colSpan="5" style={{ textAlign: 'center' }}>No data to show</td>
                 </tr>
               ) : (
-                filteredExpenses.map(exp => {
-                  const [year, month, day] = exp.date.split('-');
-                  const formattedDate = `${day}/${month}/${year}`;
-                  return (
-                    <tr key={exp.id}>
-                      <td>{exp.title}</td>
-                      <td>{exp.amount}</td>
-                      <td>{exp.category}</td>
-                      <td>{exp.date}</td>
-                      <td>{exp.description}</td>
-                    </tr>
-                  );
-                })
+                <>
+                  {filteredExpenses.map(exp => {
+                    const [year, month, day] = exp.date.split('-');
+                    const formattedDate = `${day}/${month}/${year}`;
+                    return (
+                      <tr key={exp.id}>
+                        <td>{exp.title}</td>
+                        <td>{exp.amount}</td>
+                        <td>{exp.category}</td>
+                        <td>{formattedDate}</td>
+                        <td>{exp.description}</td>
+                      </tr>
+                    );
+                  })}
+                  <tr>
+                    <td><strong>Total</strong></td>
+                    <td><strong>{totalAmount.toFixed(2)}</strong></td>
+                    <td colSpan="3"></td>
+                  </tr>
+                </>
               )}
             </tbody>
 
@@ -145,10 +167,23 @@ const DashboardPage = () => {
               <select name="category" value={form.category} onChange={handleChange}>
                 <option value="">Select Category</option>
                 <option value="Food">Food</option>
-                <option value="Travel">Travel</option>
                 <option value="Groceries">Groceries</option>
+                <option value="Travel">Travel</option>
+                <option value="Shopping">Shopping</option>
+                <option value="EMIs">EMIs</option>
+                <option value="Investments">Investments</option>
+                <option value="Rent">Rent</option>
+                <option value="Utilities">Utilities</option>
+                <option value="Health & Medical">Health & Medical</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Education">Education</option>
+                <option value="Savings">Savings</option>
+                <option value="Gifts & Donations">Gifts & Donations</option>
+                <option value="Insurance">Insurance</option>
+                <option value="Fuel / Transport">Fuel / Transport</option>
                 <option value="Others">Others</option>
               </select>
+
               <input name="date" type="date" value={form.date} onChange={handleChange} />
               <input name="description" placeholder="Description" value={form.description} onChange={handleChange} />
               <button type="submit">Add Expense</button>

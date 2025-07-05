@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signup } from '../Services/authService';
 import icon from '../Public/icon.png'
+import { toast } from 'react-toastify';
+// import ThemeToggle from '../Components/ThemeToggle';
 
 const SignupPage = () => {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -14,15 +16,16 @@ const SignupPage = () => {
     e.preventDefault();
     try {
       await signup(form);
-      alert('Signup successful');
+      toast.success('Signup successful. Please Login');
       navigate('/login');
     } catch (err) {
-      alert(err.response?.data?.error || 'Signup failed');
+      toast.error(err.response?.data?.error || 'Signup failed');
     }
   };
 
   return (
     <div className='form-container'>
+      {/* <ThemeToggle /> */}
       <div>
       <div className="logo">
         <img src={icon} alt="logo" />

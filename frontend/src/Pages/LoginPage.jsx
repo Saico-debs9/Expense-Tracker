@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import {jwtDecode} from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../Services/authService';
 import icon from '../Public/icon.png';
+import { toast } from 'react-toastify';
+// import ThemeToggle from '../Components/ThemeToggle';
 
 const LoginPage = () => {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -15,29 +18,46 @@ const LoginPage = () => {
     try {
       const res = await login(form);
       localStorage.setItem('token', res.data.token);
+      
+      const decoded = jwtDecode(res.data.token);
+      const expiryTime = decoded.exp * 1000; 
+      const delay = expiryTime - Date.now();
+
+      if (delay > 0) {
+        setTimeout(() => {
+          localStorage.removeItem('token');
+          navigate('/login');
+        }, delay);
+      } else {
+        localStorage.removeItem('token');
+        navigate('/login');
+      }
+      
       navigate('/');
     } catch (err) {
-      alert(err.response?.data?.error || 'Login failed');
+      toast.error(err.response?.data?.error || 'Login failed');
     }
   };
 
   return (
+    
     <div className='form-container'>
+      {/* <ThemeToggle /> */}
       <div>
-      <div className="logo">
-        <img src={icon} alt="logo" />
-        <h2>Expense Tracker</h2>
-      </div>
-      
-      <form onSubmit={handleSubmit}>
-        <input name="email" placeholder="Email" onChange={handleChange} />
-        <input name="password" placeholder="Password" type="password" onChange={handleChange} />
-        <button type="submit">Login</button>
-        <div className='link-container'><span>New here?</span><a className="link" href="/signup">Signin</a>
+        <div className="logo">
+          <img src={icon} alt="logo" />
+          <h2>Expense Tracker</h2>
         </div>
-      </form>
-     
-      </div>  
+
+        <form onSubmit={handleSubmit}>
+          <input name="email" placeholder="Email" onChange={handleChange} />
+          <input name="password" placeholder="Password" type="password" onChange={handleChange} />
+          <button type="submit">Login</button>
+          <div className='link-container'><span>New here?</span><a className="link" href="/signup">Signin</a>
+          </div>
+        </form>
+
+      </div>
     </div>
   );
 };
