@@ -12,6 +12,7 @@ const DashboardPage = () => {
   const [editForm, setEditForm] = useState({
     title: '', amount: '', category: '', date: '', description: ''
   });
+  const [sortedExpenses, setSortedExpenses] = useState([]);
 
 
   const navigate = useNavigate();
@@ -19,7 +20,9 @@ const DashboardPage = () => {
   const fetchExpenses = async () => {
     const res = await getExpenses();
     setExpenses(res.data);
+    setSortedExpenses(res.data);
   };
+  
 
   useEffect(() => {
     fetchExpenses();
@@ -62,7 +65,18 @@ const DashboardPage = () => {
     }
   };
 
-
+  const sortBy = (type) => {
+    let sorted = [...expenses];
+    if (type === 'amount') {
+      sorted.sort((a, b) => a.amount - b.amount);
+    } else if (type === 'date') {
+      sorted.sort((a, b) => new Date(a.date) - new Date(b.date));
+    } else if (type === 'category') {
+      sorted.sort((a, b) => a.category.localeCompare(b.category));
+    }
+    setSortedExpenses(sorted);
+  };
+  
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/login');
@@ -183,7 +197,7 @@ const DashboardPage = () => {
                     <td>{exp.category}</td>
                     <td>{exp.date}</td>
                     <td>{exp.description}</td>
-                    <td  className='edit-icon' onClick={() => handleEdit(exp)}>✏️
+                    <td className='edit-icon' onClick={() => handleEdit(exp)}>✏️
                     </td>
                   </tr>
                 )
@@ -222,8 +236,42 @@ const DashboardPage = () => {
         </div>
       )}
 
+      {tab === 'sort' && (
+        <div className="table-container">
+          <div className="sort-options">
+            <button onClick={() => sortBy('amount')}>Sort by Amount</button>
+            <button onClick={() => sortBy('date')}>Sort by Date</button>
+            <button onClick={() => sortBy('category')}>Sort by Category</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Amount</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedExpenses.map(exp => {
+                const [year, month, day] = exp.date.split('-');
+                const formattedDate = `${day}/${month}/${year}`;
+                return (
+                  <tr key={exp.id}>
+                    <td>{exp.title}</td>
+                    <td>{exp.amount}</td>
+                    <td>{exp.category}</td>
+                    <td>{formattedDate}</td>
+                    <td>{exp.description}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
 
-      {/* Future implementation: edit, delete, sort tabs */}
     </div>
   );
 };
