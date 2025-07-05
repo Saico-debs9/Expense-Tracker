@@ -34,6 +34,7 @@ const LoginPage = () => {
       }
       
       navigate('/');
+      toast.success('Logged in successfully');
     } catch (err) {
       toast.error(err.response?.data?.error || 'Login failed');
     }
