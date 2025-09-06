@@ -22,7 +22,7 @@ async function startServer() {
       await sequelize.authenticate(); 
       console.log("Connected to database (production)");
     }
-
+    app.get("/", (req, res) => {res.send("Backend running")});
     app.listen(port, '0.0.0.0', () => {
       console.log(`Backend running on http://localhost:${port}`);
     });
