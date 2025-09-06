@@ -13,9 +13,22 @@ app.use('/api/expenses', require('./routes/expenseRoutes'));
 
 const port= process.env.PORT;
 
-
-sequelize.sync().then(() => {
-  app.listen(port, '0.0.0.0', () => console.log(`Backend running on http://localhost:${port} 
-Frontend on port 3000
-Nginx on <ip>:9002`));
-});
+async function startServer() {
+  try {
+    if (process.env.NODE_ENV !== 'production') {
+      await sequelize.sync({ alter: true });
+      console.log("Database synced (development)");
+    } else {
+      await sequelize.authenticate(); 
+      console.log("Connected to database (production)");
+    }
+    app.get("/", (req, res) => {res.send("Backend running")});
+    app.listen(port, '0.0.0.0', () => {
+      console.log(`Backend running on http://localhost:${port}`);
+    });
+  } catch (error) {
+    console.error("Database error:", error);
+    process.exit(1);
+  }
+}
+startServer();
