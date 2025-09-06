@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://192.168.0.7:9099/api/expenses';
+const API_URL = `${process.env.REACT_APP_API_URL}expense`;
 
 export const getExpenses = () =>
   axios.get(API_URL, {
