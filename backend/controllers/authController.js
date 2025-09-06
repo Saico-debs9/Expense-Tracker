@@ -35,3 +35,6 @@ exports.login = async (req, res) => {
   }
 };
 
+exports.test = async(req, res)=> {
+  res.send("Backend is running");
+}
