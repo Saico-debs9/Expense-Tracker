@@ -13,8 +13,15 @@ exports.addExpense = async (req, res) => {
 };
 
 exports.getExpenses = async (req, res) => {
-  const expenses = await Expense.findAll({ where: { UserId: req.user.id } });
-  res.json(expenses);
+  try{
+    console.log("user from token:" req.user);
+    const expenses = await Expense.findAll({ where: { UserId: req.user.id } });
+    res.json(expenses);
+  }catch(err){
+    console.error("Expense fetch error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+  
 };
 exports.updateExpense = async (req, res) => {
   const { id } = req.params;
