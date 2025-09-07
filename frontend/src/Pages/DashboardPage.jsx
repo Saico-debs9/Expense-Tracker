@@ -35,6 +35,10 @@ const DashboardPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const payload = {
+    ...form,
+    amount: parseFloat(form.amount),  // ensure number
+  };
     await addExpense(form);
     toast.success("Added expense");
     setForm({ title: '', amount: '', category: '', date: '', description: '' });
