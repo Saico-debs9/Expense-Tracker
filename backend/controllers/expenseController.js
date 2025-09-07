@@ -14,7 +14,7 @@ exports.addExpense = async (req, res) => {
 
 exports.getExpenses = async (req, res) => {
   try{
-    console.log("user from token:" req.user);
+    console.log("user from token:", req.user);
     const expenses = await Expense.findAll({ where: { UserId: req.user.id } });
     res.json(expenses);
   }catch(err){
