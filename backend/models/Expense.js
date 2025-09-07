@@ -31,6 +31,9 @@ const Expense = sequelize.define('Expense', {
   
   date: DataTypes.STRING,
   description: DataTypes.STRING
+},{
+  tableName: "expenses",   
+  timestamps: true,
 });
 
 User.hasMany(Expense);
