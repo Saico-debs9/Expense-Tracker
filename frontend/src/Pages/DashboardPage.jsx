@@ -39,7 +39,7 @@ const DashboardPage = () => {
     ...form,
     amount: parseFloat(form.amount),  // ensure number
   };
-    await addExpense(form);
+    await addExpense(payload);
     toast.success("Added expense");
     setForm({ title: '', amount: '', category: '', date: '', description: '' });
     fetchExpenses();
