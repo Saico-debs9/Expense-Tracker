@@ -1,13 +1,16 @@
 const { Expense } = require('../models');
 
 exports.addExpense = async (req, res) => {
+  console.log("Incoming expense body:", req.body);
+  console.log("User from token:", req.user);
   const { title, amount, category, date, description } = req.body;
   try {
     const expense = await Expense.create({
-      title, amount, category, date, description, UserId: req.user.id
+      title, amount: parseFloat(amount), category, date, description, UserId: req.user.id
     });
     res.json(expense);
   } catch (err) {
+    console.error("Add Expense error", err);
     res.status(400).json({ error: err.message });
   }
 };
