@@ -16,8 +16,9 @@ const port= process.env.PORT;
 async function startServer() {
   try {
     if (process.env.NODE_ENV !== 'production') {
-      await sequelize.sync({ alter: true });
-      console.log("Database synced (development)");
+      sequelize.sync({ alter: true })
+  .then(() => console.log("Database synced"))
+  .catch(err => console.error("Sync error:", err));
     } else {
       await sequelize.authenticate(); 
       console.log("Connected to database (production)");
