@@ -4,6 +4,10 @@ exports.addExpense = async (req, res) => {
   console.log("Incoming expense body:", req.body);
   console.log("User from token:", req.user);
   const { title, amount, category, date, description } = req.body;
+  if (!title || !amount || !category || !date) {
+    return res.status(400).json({ error: "All fields (title, amount, category, date) are required" });
+  }
+
   try {
     const expense = await Expense.create({
       title, amount: parseFloat(amount), category, date, description, UserId: req.user.id
