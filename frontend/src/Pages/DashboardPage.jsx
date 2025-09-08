@@ -166,9 +166,9 @@ const DashboardPage = () => {
         <div className='form-container'>
           <div>
             <form onSubmit={handleSubmit}>
-              <input name="title" placeholder="Title" value={form.title} onChange={handleChange} />
-              <input name="amount" placeholder="Amount" value={form.amount} onChange={handleChange} />
-              <select name="category" value={form.category} onChange={handleChange}>
+              <input name="title" placeholder="Title" value={form.title} onChange={handleChange} required />
+              <input name="amount" placeholder="Amount" value={form.amount} onChange={handleChange} required/>
+              <select name="category" value={form.category} onChange={handleChange} required>
                 <option value="">Select Category</option>
                 <option value="Food">Food</option>
                 <option value="Groceries">Groceries</option>
@@ -188,7 +188,7 @@ const DashboardPage = () => {
                 <option value="Others">Others</option>
               </select>
 
-              <input name="date" type="date" value={form.date} onChange={handleChange} />
+              <input name="date" type="date" value={form.date} onChange={handleChange} required />
               <input name="description" placeholder="Description" value={form.description} onChange={handleChange} />
               <button type="submit">Add Expense</button>
             </form>
