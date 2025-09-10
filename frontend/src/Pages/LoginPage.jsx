@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { login } from '../Services/authService';
 import icon from '../Public/icon.png';
 import { toast } from 'react-toastify';
+import GoogleLoginButton from '../Components/GoogleLoginButton';
 // import ThemeToggle from '../Components/ThemeToggle';
 
 const LoginPage = () => {
@@ -57,7 +58,7 @@ const LoginPage = () => {
           <div className='link-container'><span>New here?</span><a className="link" href="/signup">Signin</a>
           </div>
         </form>
-
+        <GoogleLoginButton />
       </div>
     </div>
   );

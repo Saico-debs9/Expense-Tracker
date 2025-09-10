@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { signup } from '../Services/authService';
 import icon from '../Public/icon.png'
 import { toast } from 'react-toastify';
+import GoogleLoginButton from '../Components/GoogleLoginButton'
 // import ThemeToggle from '../Components/ThemeToggle';
 
 const SignupPage = () => {
@@ -41,6 +42,7 @@ const SignupPage = () => {
         </div>
 
       </form>
+      <GoogleLoginButton />
       </div>
       </div>
   );
