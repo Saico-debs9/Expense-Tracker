@@ -1,48 +1,42 @@
-import React, { useState } from "react";
-import axios from "axios";
-import GoogleLoginButton from "./GoogleLoginButton";
+import React, { useEffect } from "react";
+import { googleLogin } from "../Services/authService";
 
-const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const GoogleLoginButton = () => {
+  const handleCredentialResponse = async (response) => {
     try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/auth/login`,
-        { email, password }
-      );
+      const tokenId = response.credential;
+
+      const res = await googleLogin(tokenId);
+
       localStorage.setItem("token", res.data.token);
       window.location.href = "/dashboard";
     } catch (err) {
-      alert("Login failed");
+      console.error("Google login failed", err);
+      alert("Google login failed. Try again.");
     }
   };
 
-  return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button type="submit">Login</button>
-      </form>
+  useEffect(() => {
+    let interval = setInterval(() => {
+      if (window.google && document.getElementById("googleBtn")) {
+        clearInterval(interval);
 
-      <hr />
-      <GoogleLoginButton />
-    </div>
-  );
+        window.google.accounts.id.initialize({
+          client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+          callback: handleCredentialResponse,
+        });
+
+        window.google.accounts.id.renderButton(
+          document.getElementById("googleBtn"),
+          { theme: "outline", size: "large" }
+        );
+      }
+    }, 500);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return <div id="googleBtn"></div>;
 };
 
-export default Login;
+export default GoogleLoginButton;
