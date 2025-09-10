@@ -58,7 +58,7 @@ const LoginPage = () => {
           <div className='link-container'><span>New here?</span><a className="link" href="/signup">Signin</a>
           </div>
         </form>
-        <GoogleLoginButton />
+{/*         <GoogleLoginButton /> */}
       </div>
     </div>
   );
