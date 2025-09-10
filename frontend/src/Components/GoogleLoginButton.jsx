@@ -3,15 +3,16 @@ import { googleLogin } from "../Services/authService";
 import { useNavigate } from 'react-router-dom';
 
 const GoogleLoginButton = () => {
+  const navigate = useNavigate();
   const handleCredentialResponse = async (response) => {
     try {
       const tokenId = response.credential;
-      const navigate = useNavigate;
+      
 
       const res = await googleLogin(tokenId);
 
       localStorage.setItem("token", res.data.token);
-      navigate("/");
+      navigate('/');
     } catch (err) {
       console.error("Google login failed", err);
       alert("Google login failed. Try again.");
