@@ -42,7 +42,7 @@ const SignupPage = () => {
         </div>
 
       </form>
-      <GoogleLoginButton />
+{/*       <GoogleLoginButton /> */}
       </div>
       </div>
   );
