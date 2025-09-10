@@ -3,6 +3,36 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
+const { OAuth2Client } = require("google-auth-library");
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+exports.googleLogin = async (req, res) => {
+  try {
+    const { tokenId } = req.body;
+    const ticket = await client.verifyIdToken({
+      idToken: tokenId,
+      audience: process.env.GOOGLE_CLIENT_ID
+    });
+
+    const payload = ticket.getPayload();
+    const { sub: googleId, email, name } = payload;
+
+    let user = await User.findOne({ where: { googleId } });
+
+    if (!user) {
+      user = await User.create({ googleId, email, name });
+    }
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+      expiresIn: "30m"
+    });
+
+    res.json({ token });
+  } catch (err) {
+    console.error(err);
+    res.status(400).json({ error: "Google login failed" });
+  }
+};
 
 exports.signup = async (req, res) => {
   const { email, password } = req.body;
