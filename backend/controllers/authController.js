@@ -27,6 +27,8 @@ exports.googleLogin = async (req, res) => {
 
     const payload = ticket.getPayload();
     console.log("✅ Google token verified, payload:", payload);
+    console.log("Frontend token audience:", payload.aud);
+    console.log("Backend expected audience:", process.env.GOOGLE_CLIENT_ID);
 
     const { email, sub: googleId, name } = payload;
 
