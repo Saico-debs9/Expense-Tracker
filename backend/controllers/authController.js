@@ -9,28 +9,60 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 exports.googleLogin = async (req, res) => {
   try {
+    console.log("➡️ Incoming Google login request body:", req.body);
+
     const { tokenId } = req.body;
+
+    if (!tokenId) {
+      console.error("❌ No tokenId received in request");
+      return res.status(400).json({ error: "Missing tokenId" });
+    }
+
+    console.log("🔑 Verifying token with Google...");
+
     const ticket = await client.verifyIdToken({
       idToken: tokenId,
-      audience: process.env.GOOGLE_CLIENT_ID
+      audience: process.env.GOOGLE_CLIENT_ID,
     });
 
     const payload = ticket.getPayload();
-    const { sub: googleId, email, name } = payload;
+    console.log("✅ Google token verified, payload:", payload);
 
-    let user = await User.findOne({ where: { googleId } });
+    const { email, sub: googleId, name } = payload;
+
+    if (!email) {
+      console.error("❌ No email returned from Google");
+      return res.status(400).json({ error: "No email from Google" });
+    }
+
+    // 🔎 Check if user already exists
+    let user = await User.findOne({ where: { email } });
 
     if (!user) {
-      user = await User.create({ googleId, email, name });
+      console.log("👤 No user found, creating new one...");
+      user = await User.create({
+        email,
+        googleId,
+        name,
+      });
+    } else {
+      console.log("👤 Existing user found:", user.email);
     }
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "30m"
-    });
 
-    res.json({ token });
+    // 🚀 Create session / JWT (depending on your setup)
+    // Example: send user object back for now
+    res.json({
+      success: true,
+      message: "Google login successful",
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+      },
+    });
   } catch (err) {
-    console.error(err);
-    res.status(400).json({ error: "Google login failed" });
+    console.error("❌ Error in googleLogin:", err.message);
+    res.status(400).json({ error: "Google login failed", details: err.message });
   }
 };
 
