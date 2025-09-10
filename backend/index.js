@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 require('dotenv').config();
-const { sequelize } = require('./models');
+const { sequelize, User, Expense } = require('./models');
 
 app.use(cors());
 app.use(express.json());
@@ -15,16 +15,11 @@ const port= process.env.PORT;
 
 async function startServer() {
   try {
-    if (process.env.NODE_ENV !== 'production') {
-      await sequelize.sync({ alter: true });
-      console.log("Database synced (development)");
-    } else {
-      await sequelize.authenticate(); 
-      console.log("Connected to database (production)");
-    }
-    app.get("/", (req, res) => {res.send("Backend running")});
-    app.listen(port, '0.0.0.0', () => {
-      console.log(`Backend running on http://localhost:${port}`);
+   
+    await sequelize.sync({ alter: true }); 
+    console.log("Database synced");
+    app.listen(process.env.PORT, '0.0.0.0', () => {
+      console.log(`Backend running on http://localhost:${process.env.PORT}`);
     });
   } catch (error) {
     console.error("Database error:", error);

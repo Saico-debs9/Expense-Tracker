@@ -5,7 +5,6 @@ const User = require('./User');
 const Expense = sequelize.define('Expense', {
   title: DataTypes.STRING,
   amount: DataTypes.FLOAT,
-  bank: DataTypes.STRING,
   category: {
     type: DataTypes.ENUM(
       'Food',
@@ -31,6 +30,9 @@ const Expense = sequelize.define('Expense', {
   
   date: DataTypes.STRING,
   description: DataTypes.STRING
+},{
+  tableName: "expenses",   
+  timestamps: true,
 });
 
 User.hasMany(Expense);
