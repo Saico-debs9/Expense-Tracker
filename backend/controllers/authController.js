@@ -46,6 +46,7 @@ exports.googleLogin = async (req, res) => {
         email,
         googleId,
         name,
+        password: null,
       });
     } else {
       console.log("👤 Existing user found:", user.email);
