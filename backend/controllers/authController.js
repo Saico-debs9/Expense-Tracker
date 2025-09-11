@@ -51,9 +51,11 @@ exports.googleLogin = async (req, res) => {
     } else {
       console.log("👤 Existing user found:", user.email);
     }
-
-    // 🚀 Create session / JWT (depending on your setup)
-    // Example: send user object back for now
+    const token = jwt.sign(
+  { id: user.id, email: user.email },
+  process.env.JWT_SECRET,
+  { expiresIn: "30m" }
+);
     res.json({
       success: true,
       message: "Google login successful",
