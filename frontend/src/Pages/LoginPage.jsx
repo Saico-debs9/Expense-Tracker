@@ -57,8 +57,9 @@ const LoginPage = () => {
           <button type="submit">Login</button>
           <div className='link-container'><span>New here?</span><a className="link" href="/signup">Signin</a>
           </div>
+          <GoogleLoginButton />
         </form>
-        <GoogleLoginButton />
+        
       </div>
     </div>
   );
