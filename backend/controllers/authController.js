@@ -59,6 +59,7 @@ exports.googleLogin = async (req, res) => {
     res.json({
       success: true,
       message: "Google login successful",
+      token,
       user: {
         id: user.id,
         email: user.email,
